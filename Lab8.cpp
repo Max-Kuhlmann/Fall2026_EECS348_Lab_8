@@ -202,8 +202,7 @@ string subtractMagnitude(string a, string b, int& decimalPosition) {
 		result[right] = temp;
 		left++;
 		right--;
-	}
-	return result;	
+	}	
 	size_t first = result.find_first_not_of('0');
 	if(first == string::npos) {
 		return "0";
