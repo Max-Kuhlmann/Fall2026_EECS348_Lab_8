@@ -1,8 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
-#include <algorithm>
 using namespace std;
 
 class numAsString {
@@ -160,7 +158,15 @@ string addMagnitude(string a, string b, int& decimalPosition) {
 		result.push_back(static_cast<char>('0' + carry));
 		decimalPosition++;
 	}
-	reverse(result.begin(), result.end());
+	int left = 0;
+	int right = static_cast<int>(result.length()) - 1;
+	while (left < right) {
+		char temp = result[left];
+		result[left] = result[right];
+		result[right] = temp;
+		left++;
+		right--;
+	}
 	return result;
 }
 
@@ -188,7 +194,16 @@ string subtractMagnitude(string a, string b, int& decimalPosition) {
 		}
 		result.push_back(static_cast<char>('0' + digit));
 	}
-	reverse(result.begin(), result.end());
+	int left = 0;
+	int right = static_cast<int>(result.length()) - 1;
+	while (left < right) {
+		char temp = result[left];
+		result[left] = result[right];
+		result[right] = temp;
+		left++;
+		right--;
+	}
+	return result;	
 	size_t first = result.find_first_not_of('0');
 	if(first == string::npos) {
 		return "0";
