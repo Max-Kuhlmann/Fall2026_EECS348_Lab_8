@@ -86,7 +86,7 @@ string addNumbers(string num1, string num2) {
 		left++;
 		right--;
 	}
-	result.insert(result.length() - fixedNum1.number.length() + fixedNum1.decimalPosition, ".");
+	result.insert(result.length() - result.length() + fixedNum1.decimalPosition, ".");
 	return result;
 }
 
