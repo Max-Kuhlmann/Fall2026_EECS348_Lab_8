@@ -36,10 +36,12 @@ numAsString prepareNumber(string num) {
 	if(num[0] == '-') {
 		sign = '-';
 		num.erase(0, 1);
+		decimalPosition--;
 	} else {
 		sign = '+';
 		if(num[0] == '+') {
 			num.erase(0, 1);
+			decimalPosition--;
 		}
 	}
 	fixedNum.number = num;
@@ -51,10 +53,12 @@ numAsString prepareNumber(string num) {
 string addNumbers(string num1, string num2) {
 	numAsString fixedNum1 = prepareNumber(num1);
 	numAsString fixedNum2 = prepareNumber(num2);
-	if(fixedNum1.number.length() - fixedNum1.decimalPosition < fixedNum2.number.length() - fixedNum2.decimalPosition) {
-		fixedNum1 = padNumBack(fixedNum1, fixedNum1.number.length() - fixedNum1.decimalPosition - fixedNum2.number.length() + fixedNum2.decimalPosition);
+	int decimals1 = fixedNum1.number.length() - fixedNum1.decimalPosition;
+	int decimals2 = fixedNum2.number.length() - fixedNum2.decimalPosition;
+	if(decimals1 < decimals2) {
+		fixedNum1 = padNumBack(fixedNum1, decimals2 - decimals1);
 	} else {
-		fixedNum2 = padNumBack(fixedNum2, fixedNum2.number.length() - fixedNum2.decimalPosition - fixedNum1.number.length() + fixedNum1.decimalPosition);
+		fixedNum2 = padNumBack(fixedNum2, decimals1 - decimals2);
 	}
 	if(fixedNum1.number.length() < fixedNum2.number.length()) {
 		fixedNum1 = padNumFront(fixedNum1, fixedNum2.number.length() - fixedNum1.number.length());
@@ -69,6 +73,16 @@ string addNumbers(string num1, string num2) {
 		result += char('0' + sum % 10);
 		carry = sum / 10;
 	}
+	int left = 0;
+	int right = result.length() - 1;
+	while(left < right) {
+		char temp = result[left];
+		result[left] = result[right];
+		result[right] = temp;
+		left++;
+		right--;
+	}
+	result.insert(result.length() - fixedNum1.number.length() + fixedNum1.decimalPosition, ".");
 	return result;
 }
 
@@ -82,7 +96,7 @@ bool isValidNumber(string num) {
 					return false;
 				}
 				numOfDecimals++;
-			} else if(i == 0 && c == '-' || c == '+') {
+			} else if(i == 0 && (c == '-' || c == '+')) {
 					return true;
 			} else {
 				return false;
