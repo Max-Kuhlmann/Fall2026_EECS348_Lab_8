@@ -21,6 +21,7 @@ numAsString padNumFront(numAsString num, int zerosToAdd) {
         for(int i = 0; i < zerosToAdd; i++) {
                 num.number = '0' + num.number;
         }
+	num.decimalPosition += zerosToAdd;
         return num;
 }
 
@@ -63,7 +64,7 @@ string addNumbers(string num1, string num2) {
 	if(fixedNum1.number.length() < fixedNum2.number.length()) {
 		fixedNum1 = padNumFront(fixedNum1, fixedNum2.number.length() - fixedNum1.number.length());
 	} else {
-		fixedNum2 = padNumFront(fixedNum2, fixedNum2.number.length() - fixedNum1.number.length());
+		fixedNum2 = padNumFront(fixedNum2, fixedNum1.number.length() - fixedNum2.number.length());
 	}
 	int sum = 0;
 	string result = "";
@@ -72,6 +73,9 @@ string addNumbers(string num1, string num2) {
 		sum = (fixedNum1.number[i - 1] - '0') + (fixedNum2.number[i - 1] - '0') + carry;
 		result += char('0' + sum % 10);
 		carry = sum / 10;
+	}
+	if(carry > 0) {
+		result += char('0' + carry);
 	}
 	int left = 0;
 	int right = result.length() - 1;
@@ -96,9 +100,7 @@ bool isValidNumber(string num) {
 					return false;
 				}
 				numOfDecimals++;
-			} else if(i == 0 && (c == '-' || c == '+')) {
-					return true;
-			} else {
+			} else if(!(i == 0 && (c == '-' || c == '+'))) {
 				return false;
 			}
 		}
@@ -120,7 +122,7 @@ void calculateFromFile(string filename) {
 			cout << "line" << linenum << ": ERROR: expected exactly two numbers" << endl;
 		} else if(input >> extra) {
 			cout << "line" << linenum << ": ERROR: expected exactly two numbers" << endl;
-		}if(isValidNumber(a) && isValidNumber(b)) {
+		} else if(isValidNumber(a) && isValidNumber(b)) {
 			cout << "line" << linenum << ": " << a << " + " << b << " = " << addNumbers(a, b) << endl;
 		} else if(isValidNumber(a)) {
 			cout << "line" << linenum << ": ERROR: invalid number \"" << b << "\"" << endl;
